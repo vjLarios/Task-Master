@@ -14,3 +14,6 @@ $autoloader->register();
 
 // 4. Instancia el router y defínelo como global
 $router = new Router();
+
+// Ruta de inicio
+$router->add('GET', '/', 'HomeController@index');

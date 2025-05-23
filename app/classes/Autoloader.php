@@ -10,10 +10,23 @@ class Autoloader
 
     private function loadClass($class)
     {
-        // Convertir namespace a ruta: App\Controllers\Home => app/controllers/Home.php
-        $path = __DIR__ . '/../' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($path)) {
-            require $path;
+        // Base de tu aplicación
+        $baseDir = __DIR__ . '/../';
+
+        // Directorios donde buscar clases
+        $dirs = [
+            'classes',     // para librerías internas si las hubiera
+            'controllers', // para HomeController, TasksController…
+            'models',      // para Task.php…
+        ];
+
+        foreach ($dirs as $dir) {
+            $file = $baseDir . $dir . '/' . $class . '.php';
+            if (file_exists($file)) {
+                require $file;
+                return;
+            }
         }
+        // Si no lo encontró, puede dejarse vacío (dará  error al instanciar)
     }
 }
