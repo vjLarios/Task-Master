@@ -19,4 +19,7 @@ $router = new Router();
 $router->add('GET', '/', 'HomeController@index');
 // Listar tareas
 $router->add('GET', '/tasks', 'TasksController@index');
-
+// Formulario de creación
+$router->add('GET',  '/tasks/create', 'TasksController@create');
+// Almacenar nueva tarea
+$router->add('POST', '/tasks',        'TasksController@store');
