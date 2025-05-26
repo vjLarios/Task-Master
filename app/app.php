@@ -17,3 +17,6 @@ $router = new Router();
 
 // Ruta de inicio
 $router->add('GET', '/', 'HomeController@index');
+// Listar tareas
+$router->add('GET', '/tasks', 'TasksController@index');
+
