@@ -7,6 +7,8 @@ require __DIR__ . '/config.php';
 // 2. Carga clases principales
 require __DIR__ . '/classes/Autoloader.php';
 require __DIR__ . '/classes/Router.php';
+require __DIR__ . '/classes/DB.php';
+
 
 // 3. Arranca el autoloader
 $autoloader = new Autoloader();
