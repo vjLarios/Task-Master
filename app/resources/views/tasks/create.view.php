@@ -11,10 +11,10 @@ if (!empty($_SESSION['swal'])) {
 ?>
 
 <h1>Crear Nueva Tarea</h1>
-<form action="<?php echo BASE_URL; ?>/tasks" method="POST">
+<form action="<?php echo BASE_URL; ?>/tasks" method="POST" id="formTarea" autocomplete="off">
   <div class="form-group">
     <label for="title">Título:</label>
-    <input type="text" id="title"  class="validable" name="title">
+    <input type="text" id="title" class="validable" name="title">
   </div>
   <div class="form-group">
     <label for="description">Descripción:</label>
@@ -22,12 +22,12 @@ if (!empty($_SESSION['swal'])) {
   </div>
   <div class="form-group">
     <label for="due_date">Fecha de vencimiento:</label>
-    <input type="date" id="due_date" class="validable" name="due_date" min="<?php echo date('Y-m-d'); ?>" >
+    <input type="date" id="due_date" class="validable" name="due_date" min="<?php echo date('Y-m-d'); ?>">
   </div>
   <div class="form-group">
     <label for="status">Estado:</label>
     <select id="status" name="status" class="validable">
-      <option value="" disabled selected>Seleccione un estado</option>
+      <option value="">Selecciona un estado</option>
       <option value="pendiente">Pendiente</option>
       <option value="en progreso">En progreso</option>
       <option value="completada">Completada</option>
@@ -35,6 +35,61 @@ if (!empty($_SESSION['swal'])) {
   </div>
   <button type="submit" class="btn btn-primary">Guardar tarea</button>
 </form>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('formTarea');
+    form.noValidate = true;
+    form.addEventListener('submit', function(e) {
+      const campos = form.querySelectorAll('.validable');
+      for (let campo of campos) {
+        if (!campo.value.trim()) {
+          e.preventDefault();
+          if (campo.id === 'due_date') {
+            Swal.fire({
+              icon: 'error',
+              title: 'Fecha inválida',
+              text: 'La fecha debe ser igual o posterior a la actual.'
+            });
+          } else if (campo.id === 'title') {
+            Swal.fire({
+              icon: 'error',
+              title: 'Campo obligatorio',
+              text: 'El título es obligatorio.'
+            });
+          } else if (campo.id === 'status') {
+            Swal.fire({
+              icon: 'error',
+              title: 'Campo obligatorio',
+              text: 'Debes seleccionar un estado.'
+            });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Campo obligatorio',
+              text: 'Por favor completa todos los campos requeridos.'
+            });
+          }
+          campo.focus();
+          return;
+        }
+      }
+      const fecha = form.querySelector('#due_date').value;
+      const hoy = new Date();
+      hoy.setHours(0,0,0,0);
+      const fechaSel = new Date(fecha);
+      if (fechaSel < hoy) {
+        e.preventDefault();
+        Swal.fire({
+          icon: 'error',
+          title: 'Fecha inválida',
+          text: 'La fecha debe ser igual o posterior a la actual.'
+        });
+        form.querySelector('#due_date').focus();
+        return;
+      }
+    });
+  });
+</script>
 
 <p><a href="<?php echo BASE_URL; ?>/tasks" class="btn btn-secondary">← Volver al listado</a></p>
 

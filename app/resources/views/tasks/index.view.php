@@ -22,7 +22,7 @@ if (!empty($_SESSION['swal'])) {
     <div class="card">
       <h3><?php echo htmlspecialchars($task['title']); ?></h3>
       <p><strong>Vencimiento:</strong> <?php echo htmlspecialchars($task['due_date']); ?></p>
-      <p><strong>Estado:</strong> <?php echo htmlspecialchars($task['status']); ?></p>
+      <p><strong>Estado:</strong> <?php echo Task::mostrarStatus($task['status']); ?></p>
       <a href="<?php echo BASE_URL; ?>/tasks/<?php echo $task['id']; ?>" class="btn btn-secondary">Ver</a>
       <a href="<?php echo BASE_URL; ?>/tasks/<?php echo $task['id']; ?>/edit" class="btn btn-secondary">Editar</a>
     </div>

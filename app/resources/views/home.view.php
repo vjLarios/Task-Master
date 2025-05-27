@@ -45,8 +45,8 @@ if (!empty($_SESSION['swal'])) {
   <?php else: foreach ($tasks as $task): ?>
     <div class="card">
       <h3><?php echo htmlspecialchars($task['title']); ?></h3>
-      <p>Due Date: <?php echo htmlspecialchars($task['due_date']); ?></p>
-      <p>Status: <?php echo htmlspecialchars($task['status']); ?></p>
+      <p><strong>Vencimiento:</strong> <?php echo htmlspecialchars($task['due_date']); ?></p>
+      <p><strong>Estado:</strong> <?php echo Task::mostrarStatus($task['status']); ?></p>
       <div class="actions">
         <a href="<?php echo BASE_URL; ?>/tasks/<?php echo $task['id']; ?>" class="btn btn-secondary">View</a>
         <a href="<?php echo BASE_URL; ?>/tasks/<?php echo $task['id']; ?>/edit" class="btn btn-secondary">Edit</a>

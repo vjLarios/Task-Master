@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     searchInput.focus();
   }
 
-  // 2) Validación de formularios (vacíos + fecha)
+  // 2) Validación de formularios (vacíos + fecha) en español y con SweetAlert
   document.querySelectorAll('form').forEach(form => {
     form.addEventListener('submit', e => {
       // Campos vacíos
@@ -29,18 +29,29 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         return;
       }
-
-      // Fecha válida (YYYY-MM-DD)
+      // Fecha válida (YYYY-MM-DD y no anterior a hoy)
       const dateInput = form.querySelector('#due_date');
       if (dateInput) {
         const val = dateInput.value.trim();
         const re = /^\d{4}-\d{2}-\d{2}$/;
-        if (!re.test(val) || isNaN(new Date(val).getTime())) {
+        const hoy = new Date();
+        hoy.setHours(0,0,0,0);
+        const fecha = new Date(val);
+        if (!re.test(val) || isNaN(fecha.getTime())) {
           e.preventDefault();
           Swal.fire({
             icon: 'error',
             title: 'Fecha inválida',
-            text: 'Por favor ingresa una fecha en formato AAAA-MM-DD válida.'
+            text: 'Por favor ingresa una fecha válida en formato AAAA-MM-DD.'
+          });
+          return;
+        }
+        if (fecha < hoy) {
+          e.preventDefault();
+          Swal.fire({
+            icon: 'error',
+            title: 'Fecha inválida',
+            text: 'La fecha no puede ser anterior al día de hoy.'
           });
           return;
         }
@@ -49,14 +60,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 3) DELETE vía fetch() con SweetAlert2
+  // 3) DELETE vía fetch() con SweetAlert2 en español
   document.querySelectorAll('[data-method="DELETE"]').forEach(el => {
     el.addEventListener('click', e => {
       e.preventDefault();
       const url = el.getAttribute('href') || el.dataset.url;
       Swal.fire({
         title: '¿Eliminar tarea?',
-        text: "¡No podrás revertir esto!",
+        text: '¡No podrás revertir esto!',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Sí, eliminar',
@@ -64,10 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }).then(result => {
         if (result.isConfirmed) {
           fetch(url, { method: 'DELETE' })
-            .then(res => {
-              // Si tu endpoint redirige, aquí fallará; ideal que devuelva JSON:
-              return res.json ? res.json() : { success: true };
-            })
+            .then(res => res.json ? res.json() : { success: true })
             .then(data => {
               if (data.success !== false) {
                 Swal.fire({

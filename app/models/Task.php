@@ -33,7 +33,8 @@ class Task
             'title'       => $data['title'],
             'description' => $data['description'],
             'due_date'    => $data['due_date'],
-            'status'      => $data['status'],
+            // Traducción de estado a valores válidos en la BD
+            'status'      => self::traducirStatus($data['status']),
         ]);
         return (int)$db->lastInsertId();
     }
@@ -54,7 +55,7 @@ class Task
             'title'       => $data['title'],
             'description' => $data['description'],
             'due_date'    => $data['due_date'],
-            'status'      => $data['status'],
+            'status'      => self::traducirStatus($data['status']),
         ]);
     }
 
@@ -92,5 +93,25 @@ class Task
         $stmt = $db->prepare($query);
         $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function traducirStatus($status)
+    {
+        // Traduce de español a valores válidos en la BD
+        switch (strtolower($status)) {
+            case 'pendiente': return 'pending';
+            case 'en progreso': return 'in_progress';
+            case 'completada': return 'completed';
+            default: return 'pending';
+        }
+    }
+    public static function mostrarStatus($status)
+    {
+        switch ($status) {
+            case 'pending': return 'Pendiente';
+            case 'in_progress': return 'En progreso';
+            case 'completed': return 'Completada';
+            default: return $status;
+        }
     }
 }

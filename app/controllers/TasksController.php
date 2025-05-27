@@ -42,7 +42,7 @@ class TasksController
         if (empty($data['due_date'])) {
             $errors[] = 'La fecha es obligatoria.';
         } elseif ($data['due_date'] < $today) {
-            $errors[] = 'La fecha no puede ser anterior a hoy.';
+            $errors[] = 'La fecha debe ser igual o mayor a hoy.';
         }
         if (empty($data['status'])) {
             $errors[] = 'El estado es obligatorio.';
@@ -107,7 +107,7 @@ class TasksController
         if (empty($data['due_date'])) {
             $errors[] = 'La fecha es obligatoria.';
         } elseif ($data['due_date'] < $today) {
-            $errors[] = 'La fecha no puede ser anterior a hoy.';
+            $errors[] = 'La fecha debe ser igual o mayor a hoy.';
         }
         if (empty($data['status'])) {
             $errors[] = 'El estado es obligatorio.';
