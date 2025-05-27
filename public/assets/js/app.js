@@ -75,16 +75,18 @@ document.addEventListener('DOMContentLoaded', () => {
       }).then(result => {
         if (result.isConfirmed) {
           fetch(url, { method: 'DELETE' })
-            .then(res => res.json ? res.json() : { success: true })
+            .then(res => res.json())
             .then(data => {
               if (data.success !== false) {
                 Swal.fire({
-                  icon: 'success',
-                  title: 'Eliminado',
-                  text: data.message || 'Tarea eliminada.',
-                  timer: 1200,
-                  showConfirmButton: false
-                }).then(() => window.location.reload());
+                    icon: 'success',
+                    title: 'Eliminado',
+                    text: data.message || 'Tarea eliminada.',
+                    timer: 1200,
+                    showConfirmButton: false
+                }).then(() => {
+                    window.location.href = '/tasks';
+                   });
               } else {
                 Swal.fire('Error', data.message || 'No se pudo eliminar.', 'error');
               }

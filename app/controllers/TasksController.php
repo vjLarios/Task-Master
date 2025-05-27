@@ -152,23 +152,18 @@ class TasksController
      * @param array $params ['id' => ...]
      */
     public function destroy(array $params)
-    {
-        $id = (int)$params['id'];
-        $success = Task::delete($id);
-        $isAjax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
-        if ($isAjax) {
-            header('Content-Type: application/json');
-            if ($success) {
-                echo json_encode(['success' => true, 'message' => 'Tarea eliminada correctamente.']);
-            } else {
-                echo json_encode(['success' => false, 'message' => 'No se pudo eliminar la tarea.']);
-            }
-            exit;
-        }
-        // Tras eliminar, redirige al listado
-        header('Location: ' . BASE_URL . '/tasks');
+{
+    $id = (int)$params['id'];
+    if (! Task::delete($id)) {
+        http_response_code(500);
+        echo json_encode(['success' => false, 'message' => 'Error al eliminar']);
         exit;
     }
+    header('Content-Type: application/json');
+    echo json_encode(['success' => true, 'message' => 'Tarea eliminada']);
+    exit;
+}
+
 
 
 }
