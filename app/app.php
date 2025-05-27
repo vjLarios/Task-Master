@@ -1,6 +1,8 @@
 <?php
 // app/app.php
 
+session_start();
+
 // 1. Carga configuración
 require __DIR__ . '/config.php';
 

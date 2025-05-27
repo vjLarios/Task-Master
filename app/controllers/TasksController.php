@@ -28,23 +28,40 @@ class TasksController
      */
     public function store()
     {
-        // 1. Recoge datos del POST
         $data = [
-            'title'       => $_POST['title']       ?? '',
-            'description' => $_POST['description'] ?? '',
-            'due_date'    => $_POST['due_date']    ?? '',
-            'status'      => $_POST['status']      ?? 'pendiente',
+            'title'       => trim($_POST['title'] ?? ''),
+            'description' => trim($_POST['description'] ?? ''),
+            'due_date'    => $_POST['due_date'] ?? '',
+            'status'      => $_POST['status'] ?? 'pendiente',
         ];
-
-        // 2. Validación mínima
+        $today = date('Y-m-d');
+        $errors = [];
         if (empty($data['title'])) {
-            die('El título es obligatorio.');
+            $errors[] = 'El título es obligatorio.';
         }
-
-        // 3. Inserta la nueva tarea
-        $newId = Task::insert($data);
-
-        // 4. Redirige al listado de tareas
+        if (empty($data['due_date'])) {
+            $errors[] = 'La fecha es obligatoria.';
+        } elseif ($data['due_date'] < $today) {
+            $errors[] = 'La fecha no puede ser anterior a hoy.';
+        }
+        if (empty($data['status'])) {
+            $errors[] = 'El estado es obligatorio.';
+        }
+        if ($errors) {
+            $_SESSION['swal'] = [
+                'icon' => 'error',
+                'title' => 'Error al crear tarea',
+                'text' => implode("\n", $errors)
+            ];
+            header('Location: ' . BASE_URL . '/tasks/create');
+            exit;
+        }
+        Task::insert($data);
+        $_SESSION['swal'] = [
+            'icon' => 'success',
+            'title' => 'Tarea creada',
+            'text' => 'La tarea fue creada correctamente.'
+        ];
         header('Location: ' . BASE_URL . '/tasks');
         exit;
     }
@@ -75,26 +92,41 @@ class TasksController
      */
     public function update(array $params)
     {
-        // 1. ID de la tarea
         $id = (int) $params['id'];
-
-        // 2. Recoge datos del POST
         $data = [
-            'title'       => $_POST['title']       ?? '',
-            'description' => $_POST['description'] ?? '',
-            'due_date'    => $_POST['due_date']    ?? '',
-            'status'      => $_POST['status']      ?? 'pendiente',
+            'title'       => trim($_POST['title'] ?? ''),
+            'description' => trim($_POST['description'] ?? ''),
+            'due_date'    => $_POST['due_date'] ?? '',
+            'status'      => $_POST['status'] ?? 'pendiente',
         ];
-
-        // 3. Validación mínima
+        $today = date('Y-m-d');
+        $errors = [];
         if (empty($data['title'])) {
-            die('El título es obligatorio.');
+            $errors[] = 'El título es obligatorio.';
         }
-
-        // 4. Actualiza en BD
+        if (empty($data['due_date'])) {
+            $errors[] = 'La fecha es obligatoria.';
+        } elseif ($data['due_date'] < $today) {
+            $errors[] = 'La fecha no puede ser anterior a hoy.';
+        }
+        if (empty($data['status'])) {
+            $errors[] = 'El estado es obligatorio.';
+        }
+        if ($errors) {
+            $_SESSION['swal'] = [
+                'icon' => 'error',
+                'title' => 'Error al editar tarea',
+                'text' => implode("\n", $errors)
+            ];
+            header('Location: ' . BASE_URL . '/tasks/' . $id . '/edit');
+            exit;
+        }
         Task::update($id, $data);
-
-        // 5. Redirige al listado
+        $_SESSION['swal'] = [
+            'icon' => 'success',
+            'title' => 'Tarea actualizada',
+            'text' => 'La tarea fue actualizada correctamente.'
+        ];
         header('Location: ' . BASE_URL . '/tasks');
         exit;
     }
@@ -122,7 +154,17 @@ class TasksController
     public function destroy(array $params)
     {
         $id = (int)$params['id'];
-        Task::delete($id);
+        $success = Task::delete($id);
+        $isAjax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+        if ($isAjax) {
+            header('Content-Type: application/json');
+            if ($success) {
+                echo json_encode(['success' => true, 'message' => 'Tarea eliminada correctamente.']);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'No se pudo eliminar la tarea.']);
+            }
+            exit;
+        }
         // Tras eliminar, redirige al listado
         header('Location: ' . BASE_URL . '/tasks');
         exit;

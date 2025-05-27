@@ -1,42 +1,32 @@
-<!-- app/resources/views/tasks/index.view.php -->
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Task Master – Mis Tareas</title>
-</head>
-<body>
-    <h1>Mis Tareas</h1>
-    <p><a href="<?php echo BASE_URL; ?>/tasks/create">Crear nueva tarea</a></p>
+<?php require __DIR__ . '/../../layouts/main_head.php'; ?>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <?php if (empty($tasks)): ?>
-        <p>No hay tareas registradas.</p>
-    <?php else: ?>
-        <table border="1" cellpadding="8" cellspacing="0">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Título</th>
-                    <th>Vencimiento</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($tasks as $task): ?>
-                <tr>
-                    <td><?php echo htmlspecialchars($task['id']); ?></td>
-                    <td><?php echo htmlspecialchars($task['title']); ?></td>
-                    <td><?php echo htmlspecialchars($task['due_date']); ?></td>
-                    <td><?php echo htmlspecialchars($task['status']); ?></td>
-                    <td>
-                        <a href="<?php echo BASE_URL; ?>/tasks/<?php echo $task['id']; ?>">Ver</a> |
-                        <a href="<?php echo BASE_URL; ?>/tasks/<?php echo $task['id']; ?>/edit">Editar</a>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    <?php endif; ?>
-</body>
-</html>
+<?php
+if (session_status() === PHP_SESSION_NONE) session_start();
+if (!empty($_SESSION['swal'])) {
+    $swal = $_SESSION['swal'];
+    echo "<script>Swal.fire({icon: '" . addslashes($swal['icon']) . "', title: '" . addslashes($swal['title']) . "', text: '" . addslashes($swal['text']) . "'});</script>";
+    unset($_SESSION['swal']);
+}
+?>
+
+<div class="search-container">
+  <input type="text" placeholder="Buscar tareas...">
+  <a href="<?php echo BASE_URL; ?>/tasks/create" class="btn btn-primary">Crear nueva tarea</a>
+</div>
+
+<div class="card-container">
+  <?php if (empty($tasks)): ?>
+    <p>No hay tareas registradas.</p>
+  <?php else: foreach ($tasks as $task): ?>
+    <div class="card">
+      <h3><?php echo htmlspecialchars($task['title']); ?></h3>
+      <p><strong>Vencimiento:</strong> <?php echo htmlspecialchars($task['due_date']); ?></p>
+      <p><strong>Estado:</strong> <?php echo htmlspecialchars($task['status']); ?></p>
+      <a href="<?php echo BASE_URL; ?>/tasks/<?php echo $task['id']; ?>" class="btn btn-secondary">Ver</a>
+      <a href="<?php echo BASE_URL; ?>/tasks/<?php echo $task['id']; ?>/edit" class="btn btn-secondary">Editar</a>
+    </div>
+  <?php endforeach; endif; ?>
+</div>
+
+<?php require __DIR__ . '/../../layouts/main_foot.php'; ?>
