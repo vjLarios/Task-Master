@@ -66,4 +66,31 @@ class Task
         );
         return $stmt->execute(['id' => $id]);
     }
+
+    public static function filterAndSort($search = '', $status = '', $sort = ''): array
+    {
+        $db = DB::connect();
+        $query = "SELECT * FROM " . self::$table . " WHERE 1";
+        $params = [];
+        if ($search !== '') {
+            $query .= " AND title LIKE :search";
+            $params['search'] = "%$search%";
+        }
+        if ($status !== '') {
+            $query .= " AND status = :status";
+            $params['status'] = $status;
+        }
+        if ($sort === 'date_asc') {
+            $query .= " ORDER BY due_date ASC";
+        } elseif ($sort === 'date_desc') {
+            $query .= " ORDER BY due_date DESC";
+        } elseif ($sort === 'title_asc') {
+            $query .= " ORDER BY title ASC";
+        } elseif ($sort === 'title_desc') {
+            $query .= " ORDER BY title DESC";
+        }
+        $stmt = $db->prepare($query);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
