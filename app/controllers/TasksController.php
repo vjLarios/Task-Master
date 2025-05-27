@@ -99,4 +99,34 @@ class TasksController
         exit;
     }
 
+        /**
+     * Muestra los detalles de una tarea
+     *
+     * @param array $params ['id' => ...]
+     */
+    public function show(array $params)
+    {
+        $id = (int)$params['id'];
+        $task = Task::find($id);
+        if (!$task) {
+            die('Tarea no encontrada.');
+        }
+        require __DIR__ . '/../resources/views/tasks/show.view.php';
+    }
+
+    /**
+     * Elimina la tarea especificada
+     *
+     * @param array $params ['id' => ...]
+     */
+    public function destroy(array $params)
+    {
+        $id = (int)$params['id'];
+        Task::delete($id);
+        // Tras eliminar, redirige al listado
+        header('Location: ' . BASE_URL . '/tasks');
+        exit;
+    }
+
+
 }

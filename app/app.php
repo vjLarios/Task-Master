@@ -29,4 +29,9 @@ $router->add('POST', '/tasks',        'TasksController@store');
 $router->add('GET',  '/tasks/{id}/edit', 'TasksController@edit');
 // Procesar edición
 $router->add('POST', '/tasks/{id}',      'TasksController@update');
+// Ver detalles de tarea
+$router->add('GET',    '/tasks/{id}',     'TasksController@show');
+// Eliminar tarea
+$router->add('DELETE', '/tasks/{id}',     'TasksController@destroy');
+
 
