@@ -1,7 +1,7 @@
 // public/assets/js/app.js
 
 document.addEventListener('DOMContentLoaded', () => {
-  // 1) Filtro en tiempo real (buscador de tareas)
+  // 1) Filtro buscador de tareas
   const searchInput = document.querySelector('.search-container input[type="text"]');
   if (searchInput) {
     searchInput.addEventListener('input', () => {
@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     searchInput.focus();
   }
 
-  // 2) Validación de formularios (vacíos + fecha) en español y con SweetAlert
+  // 2) Validación de formularios con SweetAlert
   document.querySelectorAll('form').forEach(form => {
     form.addEventListener('submit', e => {
       // Campos vacíos

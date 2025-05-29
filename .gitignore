@@ -1,0 +1,22 @@
+# Dependencias
+/vendor/
+/node_modules/
+
+# Archivos de configuración local
+.env
+config.local.php
+
+# Datos de MySQL (no versionar tu carpeta de datos)
+/mysql-data/
+
+# Logs
+*.log
+logs/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# IDEs/editores
+.vscode/
+.idea/
