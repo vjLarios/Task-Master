@@ -16,9 +16,9 @@ if (!empty($_SESSION['swal'])) {
     <input type="text" name="search" placeholder="Buscar tareas..." value="<?php echo htmlspecialchars($_GET['search'] ?? ''); ?>">
     <select name="status">
       <option value="">Todos los estados</option>
-      <option value="pendiente" <?php if(($_GET['status'] ?? '')==='pendiente') echo 'selected'; ?>>Pendiente</option>
-      <option value="en progreso" <?php if(($_GET['status'] ?? '')==='en progreso') echo 'selected'; ?>>En progreso</option>
-      <option value="completada" <?php if(($_GET['status'] ?? '')==='completada') echo 'selected'; ?>>Completada</option>
+      <option value="pending" <?php if(($_GET['status'] ?? '')==='pending') echo 'selected'; ?>>Pendiente</option>
+      <option value="in_progress" <?php if(($_GET['status'] ?? '')==='in_progress') echo 'selected'; ?>>En progreso</option>
+      <option value="completed" <?php if(($_GET['status'] ?? '')==='completed') echo 'selected'; ?>>Completada</option>
     </select>
     <select name="sort">
       <option value="">Ordenar por...</option>

@@ -36,6 +36,7 @@ class TasksController
         ];
         $today = date('Y-m-d');
         $errors = [];
+
         if (empty($data['title'])) {
             $errors[] = 'El título es obligatorio.';
         }
@@ -47,6 +48,7 @@ class TasksController
         if (empty($data['status'])) {
             $errors[] = 'El estado es obligatorio.';
         }
+
         if ($errors) {
             $_SESSION['swal'] = [
                 'icon' => 'error',
@@ -56,6 +58,7 @@ class TasksController
             header('Location: ' . BASE_URL . '/tasks/create');
             exit;
         }
+
         Task::insert($data);
         $_SESSION['swal'] = [
             'icon' => 'success',
@@ -65,23 +68,19 @@ class TasksController
         header('Location: ' . BASE_URL . '/tasks');
         exit;
     }
-        /**
+
+    /**
      * Muestra el formulario para editar una tarea existente
      *
      * @param array $params  Parámetros de ruta (incluye 'id')
      */
     public function edit(array $params)
     {
-        // 1. Recupera el ID de la ruta
         $id = (int) $params['id'];
-
-        // 2. Busca la tarea en el modelo
         $task = Task::find($id);
         if (!$task) {
             die('Tarea no encontrada.');
         }
-
-        // 3. Carga la vista de edición
         require __DIR__ . '/../resources/views/tasks/edit.view.php';
     }
 
@@ -101,6 +100,7 @@ class TasksController
         ];
         $today = date('Y-m-d');
         $errors = [];
+
         if (empty($data['title'])) {
             $errors[] = 'El título es obligatorio.';
         }
@@ -112,6 +112,7 @@ class TasksController
         if (empty($data['status'])) {
             $errors[] = 'El estado es obligatorio.';
         }
+
         if ($errors) {
             $_SESSION['swal'] = [
                 'icon' => 'error',
@@ -121,6 +122,7 @@ class TasksController
             header('Location: ' . BASE_URL . '/tasks/' . $id . '/edit');
             exit;
         }
+
         Task::update($id, $data);
         $_SESSION['swal'] = [
             'icon' => 'success',
@@ -131,7 +133,7 @@ class TasksController
         exit;
     }
 
-        /**
+    /**
      * Muestra los detalles de una tarea
      *
      * @param array $params ['id' => ...]
@@ -147,23 +149,20 @@ class TasksController
     }
 
     /**
-     * Elimina la tarea especificada
+     * Elimina la tarea especificada y retorna JSON
      *
      * @param array $params ['id' => ...]
      */
     public function destroy(array $params)
-{
-    $id = (int)$params['id'];
-    if (! Task::delete($id)) {
-        http_response_code(500);
-        echo json_encode(['success' => false, 'message' => 'Error al eliminar']);
+    {
+        $id = (int)$params['id'];
+        if (!Task::delete($id)) {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Error al eliminar']);
+            exit;
+        }
+        header('Content-Type: application/json');
+        echo json_encode(['success' => true, 'message' => 'Tarea eliminada']);
         exit;
     }
-    header('Content-Type: application/json');
-    echo json_encode(['success' => true, 'message' => 'Tarea eliminada']);
-    exit;
-}
-
-
-
 }
