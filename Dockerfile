@@ -10,6 +10,9 @@ COPY ./app /var/www/app
 # Habilita mod_rewrite para URLs amigables
 RUN a2enmod rewrite
 
+# Habilita la extensión pdo_mysql para MySQL
+RUN docker-php-ext-install pdo_mysql
+
 # Configura permisos (opcional)
 RUN chown -R www-data:www-data /var/www/html /var/www/app
 
